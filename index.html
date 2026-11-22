@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cachew · Saved is earned</title>
+<meta name="description" content="Cachew pauses shopping apps for 10 seconds, so impulse buys wait and Penny the squirrel fills her winter stash.">
+<link rel="icon" href="img/icon.png">
+<link rel="apple-touch-icon" href="img/icon.png">
+<meta property="og:title" content="Cachew · Saved is earned">
+<meta property="og:description" content="A 10-second pause before impulse buys. Android app.">
+<meta property="og:image" content="img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* Colors from the app's Theme.kt */
+  :root {
+    --night-top: #22213F; --night-mid: #0F1A16; --night-bottom: #060C09;
+    --purple: #8B5CF6; --purple-light: #A98BFF; --purple-dark: #6D28D9; --purple-text: #B79CFF;
+    --text: #F2EBDD; --title: #FBF6EC; --sand: #E8DCC4; --gold: #F4B63F; --heart: #F472B6;
+    --glass: rgba(255,255,255,.06); --glass-border: rgba(255,255,255,.10); --muted: rgba(242,235,221,.62);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; min-height: 100vh; color: var(--text); background: var(--night-bottom);
+    background-image: linear-gradient(180deg, var(--night-top) 0%, var(--night-mid) 55%, var(--night-bottom) 100%);
+    background-attachment: fixed;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 20px 16px 48px; }
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--title); font-size: 18px; }
+  .brand img { width: 34px; height: 34px; border-radius: 9px; }
+  .lang { display: flex; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 999px; padding: 3px; }
+  .lang button { border: 0; background: none; color: var(--muted); font: 600 13px Inter, sans-serif; padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+  .lang button[aria-pressed="true"] { background: rgba(139,92,246,.35); color: var(--title); }
+
+  .hero { text-align: center; padding: 28px 0 8px; }
+  .hero img { width: 200px; height: auto; filter: drop-shadow(0 18px 40px rgba(139,92,246,.35)); }
+  h1 { color: var(--title); font-size: 40px; line-height: 1.1; font-weight: 900; letter-spacing: -.02em; margin: 18px 0 10px; }
+  .lead { color: var(--sand); font-size: 17px; margin: 0 auto; max-width: 440px; }
+
+  .cta { display: grid; gap: 12px; margin: 28px 0 10px; }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 58px; border-radius: 18px;
+         font-weight: 700; font-size: 17px; text-decoration: none; color: #fff; padding: 12px 18px; text-align: center; }
+  .btn.primary { background: linear-gradient(135deg, var(--purple-light), var(--purple), var(--purple-dark));
+                 box-shadow: 0 10px 30px rgba(139,92,246,.40); }
+  .btn.secondary { background: var(--glass); border: 1px solid var(--glass-border); color: var(--muted); }
+  .btn small { display: block; font-weight: 500; font-size: 13px; opacity: .8; }
+  .meta { text-align: center; font-size: 13px; color: var(--muted); margin: 0; }
+
+  h2 { color: var(--title); font-size: 22px; font-weight: 800; margin: 44px 0 14px; }
+  .card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 22px; padding: 18px; }
+  .flow { display: grid; gap: 10px; }
+  .flow .card { display: flex; gap: 14px; align-items: center; }
+  .flow img { width: 64px; height: 64px; object-fit: contain; flex: none; }
+  .flow b { color: var(--title); display: block; }
+  .flow span { color: var(--muted); font-size: 15px; }
+  .gold { color: var(--gold); font-weight: 700; }
+
+  ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 10px; }
+  ol.steps > li { counter-increment: s; position: relative; padding-left: 52px; }
+  ol.steps > li::before { content: counter(s); position: absolute; left: 18px; top: 18px; width: 24px; height: 24px; border-radius: 50%;
+     background: rgba(139,92,246,.35); color: var(--title); font-weight: 700; font-size: 13px; display: grid; place-items: center; }
+  ol.steps b { color: var(--title); }
+  ol.steps ul { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 15px; }
+  ol.steps p { margin: 0; }
+
+  .privacy { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .privacy h3 { margin: 0 0 8px; font-size: 15px; color: var(--title); }
+  .privacy ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--muted); }
+  @media (max-width: 420px) { .privacy { grid-template-columns: 1fr; } h1 { font-size: 34px; } }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 44px; }
+  footer img { width: 72px; display: block; margin: 0 auto 8px; opacity: .9; }
+  a { color: var(--purple-text); }
+
+  [data-lang]:not(.on) { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><img src="img/icon.png" alt="">Cachew</div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-set="en" aria-pressed="true">EN</button>
+      <button type="button" data-set="uk" aria-pressed="false">UA</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <img src="img/penny_curl.png" alt="Penny the squirrel curled around a cashew">
+    <h1>Saved is earned.</h1>
+    <p class="lead" data-lang="en">Open a shopping app and Cachew pauses it for 10 seconds. Penny asks two questions, your want goes on a waiting list, and the money you keep fills her winter stash.</p>
+    <p class="lead" data-lang="uk">Відкриваєш магазин — Cachew ставить його на паузу на 10 секунд. Пенні ставить два питання, бажана річ іде в список очікування, а гроші, які ти не витратила, наповнюють її зимовий запас.</p>
+  </section>
+
+  <div class="cta">
+    <a class="btn primary" href="https://github.com/lizhaan/cachew-releases/releases/latest/download/Cachew.apk">
+      <span><span data-lang="en">Download for Android</span><span data-lang="uk">Завантажити для Android</span>
+      <small><span data-lang="en">APK · Android 8 or newer · ~13 MB</span><span data-lang="uk">APK · Android 8 і новіші · ~13 МБ</span></small></span>
+    </a>
+    <a class="btn secondary" aria-disabled="true">
+      <span><span data-lang="en">iPhone: try it in the browser</span><span data-lang="uk">iPhone: спробувати в браузері</span>
+      <small><span data-lang="en">Interactive demo · coming soon</span><span data-lang="uk">Інтерактивне демо · скоро</span></small></span>
+    </a>
+  </div>
+  <p class="meta"><span data-lang="en">Not on Google Play yet. </span><span data-lang="uk">Поки не в Google Play. </span><a href="https://github.com/lizhaan/cachew-releases/releases"><span data-lang="en">All versions</span><span data-lang="uk">Усі версії</span></a></p>
+
+  <h2><span data-lang="en">How it works</span><span data-lang="uk">Як це працює</span></h2>
+  <div class="flow">
+    <div class="card"><img src="img/penny_peek.png" alt="">
+      <div><b data-lang="en">Pause. Breathe.</b><b data-lang="uk">Pause. Breathe.</b>
+      <span data-lang="en">A 10-second ring over the shop, then two quick questions: how you feel and whether it was on your list.</span>
+      <span data-lang="uk">10-секундне кільце поверх магазину, потім два питання: як ти почуваєшся і чи це було в списку.</span></div></div>
+    <div class="card"><img src="img/penny_love.png" alt="">
+      <div><b data-lang="en">Just look, save, don't buy</b><b data-lang="uk">Тільки подивитись і зберегти</b>
+      <span data-lang="en">The shop opens for 10 minutes. Like something? Share it to Cachew: it waits 24–72 h. <span class="gold">+15 cashews</span></span>
+      <span data-lang="uk">Магазин відкривається на 10 хвилин. Сподобалось? «Поділитися» → Cachew, і річ чекає 24–72 год. <span class="gold">+15 cashews</span></span></div></div>
+    <div class="card"><img src="img/penny_sleep.png" alt="">
+      <div><b data-lang="en">Night shield</b><b data-lang="uk">Нічний щит</b>
+      <span data-lang="en">At night your shops stay closed. Penny's asleep. So is the sale.</span>
+      <span data-lang="uk">Вночі обрані магазини закриті. Penny's asleep. So is the sale.</span></div></div>
+  </div>
+
+  <h2><span data-lang="en">How to install</span><span data-lang="uk">Як встановити</span></h2>
+  <ol class="steps">
+    <li class="card" data-lang="en"><p><b>Download</b> the APK with the button above (or open the file in Telegram).</p></li>
+    <li class="card" data-lang="uk"><p><b>Завантаж</b> APK кнопкою вище (або відкрий файл у Telegram).</p></li>
+
+    <li class="card" data-lang="en"><p><b>Open the file.</b> Your phone asks whether apps from this source (your browser or Telegram) can be installed: tap Settings → allow from this source → go back → Install.</p></li>
+    <li class="card" data-lang="uk"><p><b>Відкрий файл.</b> Телефон спитає, чи можна встановлювати застосунки з цього джерела (браузера чи Telegram): «Налаштування» → увімкни «Дозволити з цього джерела» → назад → «Встановити».</p></li>
+
+    <li class="card" data-lang="en"><p>If <b>Google Play Protect</b> warns about an unknown app, tap “Install anyway”. That's normal for apps outside Google Play.</p></li>
+    <li class="card" data-lang="uk"><p>Якщо <b>Google Play Protect</b> попереджає про невідомий застосунок, натисни «Усе одно встановити». Це нормально для застосунків не з Google Play.</p></li>
+
+    <li class="card" data-lang="en"><p><b>Open Cachew</b>, meet Penny and pick your shops.</p></li>
+    <li class="card" data-lang="uk"><p><b>Відкрий Cachew</b>, познайомся з Пенні й обери магазини.</p></li>
+
+    <li class="card" data-lang="en"><p><b>Set up Cachew</b> walks you through 4 steps, each button opens the right settings:</p>
+      <ul>
+        <li>Allow restricted settings (Android 13+): Cachew's app info → ⋮ (top right) → Allow restricted settings.</li>
+        <li>Accessibility: turn on <b>Cachew shop pause</b>.</li>
+        <li>Background activity, so the pause shows up on Xiaomi, Samsung and others.</li>
+        <li>Notifications, for the “Still want it?” reminder.</li>
+      </ul></li>
+    <li class="card" data-lang="uk"><p><b>Екран «Set up Cachew»</b> проведе через 4 кроки, кожна кнопка відкриває потрібні налаштування:</p>
+      <ul>
+        <li>Обмежені налаштування (Android 13+): у налаштуваннях Cachew ⋮ (вгорі праворуч) → «Дозволити обмежені налаштування».</li>
+        <li>Спеціальні можливості: увімкни <b>Cachew shop pause</b>.</li>
+        <li>Робота у фоні, щоб пауза з'являлась на Xiaomi, Samsung та інших.</li>
+        <li>Сповіщення, для нагадування «Still want it?».</li>
+      </ul></li>
+  </ol>
+
+  <h2><span data-lang="en">What Cachew sees</span><span data-lang="uk">Що бачить Cachew</span></h2>
+  <div class="privacy">
+    <div class="card"><h3 data-lang="en">What we see</h3><h3 data-lang="uk">Що бачимо</h3>
+      <ul data-lang="en"><li>Which app you opened</li><li>Things you share to Cachew</li></ul>
+      <ul data-lang="uk"><li>Який застосунок ти відкрила</li><li>Речі, якими ти поділилась із Cachew</li></ul></div>
+    <div class="card"><h3 data-lang="en">What we never see</h3><h3 data-lang="uk">Чого не бачимо ніколи</h3>
+      <ul data-lang="en"><li>What's on your screen</li><li>Passwords, cards, messages</li><li>No accounts, no servers: everything stays on your phone</li></ul>
+      <ul data-lang="uk"><li>Що на твоєму екрані</li><li>Паролі, картки, повідомлення</li><li>Без акаунтів і серверів: усе лишається на телефоні</li></ul></div>
+  </div>
+
+  <footer>
+    <img src="img/penny_peek.png" alt="">
+    Cachew · <span data-lang="en">a demo project</span><span data-lang="uk">демо-проєкт</span>
+  </footer>
+</div>
+<script>
+  (function () {
+    var buttons = document.querySelectorAll('.lang button');
+    function setLang(l) {
+      document.documentElement.lang = l;
+      document.querySelectorAll('[data-lang]').forEach(function (el) { el.classList.toggle('on', el.getAttribute('data-lang') === l); });
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === l)); });
+      try { localStorage.setItem('lang', l); } catch (e) {}
+    }
+    var saved = null;
+    try { saved = localStorage.getItem('lang'); } catch (e) {}
+    var nav = (navigator.language || '').toLowerCase();
+    setLang(saved || (nav.indexOf('uk') === 0 || nav.indexOf('ru') === 0 ? 'uk' : 'en'));
+    buttons.forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.set); }); });
+  })();
+</script>
+</body>
+</html>
