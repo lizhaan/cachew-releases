@@ -285,6 +285,51 @@ button.card:active, button.tile:active, button.btn2:active { filter: brightness(
 /* ---------- Reward ---------- */
 .chip { display: inline-flex; align-items: center; gap: 10px; padding: 10px 20px; border-radius: 99px; background: var(--card); border: 1px solid var(--card-border); font-size: 19px; font-weight: 800; color: var(--title); }
 
+/* ---------- Cachew app: tabs, cards, lists ---------- */
+.tabbar {
+  display: flex; margin: 10px var(--pad); padding: 8px 0; border-radius: 24px; flex: none;
+  background: rgba(22, 50, 34, .9); border: 1px solid var(--card-border);
+}
+.tabbar button { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 0; border-radius: 16px; font-size: 12px; font-weight: 600; color: var(--text2); }
+.tabbar button.on { color: var(--purple-text); }
+.cchip { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 14px; background: var(--card); border: 1px solid var(--card-border); font-size: 15px; font-weight: 800; color: var(--title); }
+.ctitle { font-size: 18px; font-weight: 700; color: var(--title); }
+.bar { height: 8px; border-radius: 99px; background: rgba(255, 255, 255, .1); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 99px; }
+.vdiv { width: 1px; height: 36px; background: var(--card-border); flex: none; }
+.irow { display: flex; align-items: center; gap: 14px; margin-bottom: var(--gap); }
+.iname { font-size: 16px; font-weight: 700; color: var(--title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.isub { font-size: 13px; line-height: 18px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.iprice { font-size: 17px; font-weight: 800; color: var(--title); }
+.istatus { font-size: 13px; font-weight: 700; }
+.weeks { display: flex; gap: 10px; height: 90px; }
+.weeks > div { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.weeks span { flex: 1; width: 100%; display: flex; align-items: flex-end; }
+.weeks i { display: block; width: 100%; border-radius: 10px; background: linear-gradient(180deg, var(--gold), rgba(244, 182, 63, .75)); }
+.weeks b { font-size: 12px; color: var(--text2); }
+.setrow { display: flex; align-items: center; gap: 12px; padding-top: 20px; padding-bottom: 20px; margin-bottom: var(--gap); }
+.setval { font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55%; }
+.switch { width: 52px; height: 32px; border-radius: 16px; background: rgba(255, 255, 255, .12); border: 2px solid rgba(232, 220, 196, .4); position: relative; flex: none; transition: background .2s; }
+.switch i { position: absolute; top: 6px; left: 6px; width: 16px; height: 16px; border-radius: 50%; background: rgba(232, 220, 196, .6); transition: all .2s; }
+.switch.on { background: var(--purple); border-color: var(--purple); }
+.switch.on i { left: 22px; top: 2px; width: 24px; height: 24px; background: #fff; }
+
+/* Dialogs (Material AlertDialog on the app's dark green) */
+.dialog {
+  position: absolute; left: 24px; right: 24px; top: 50%; transform: translateY(-50%);
+  background: var(--bg-mid); border-radius: 28px; padding: 24px; animation: fade-in .2s ease-out;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+}
+.dlg-title { margin: 0 0 16px; font-size: 24px; font-weight: 500; color: var(--title); }
+.dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.dlg-actions button, .dlg-text { padding: 10px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; color: var(--purple-soft); text-align: left; }
+.dlg-text:disabled { color: rgba(232, 220, 196, .4); }
+.ofield { display: block; position: relative; border: 1px solid rgba(232, 220, 196, .4); border-radius: 6px; padding: 18px 14px 10px; }
+.ofield:focus-within { border-color: var(--purple-light); border-width: 2px; padding: 17px 13px 9px; }
+.ofield span { position: absolute; top: 4px; left: 14px; font-size: 12px; color: var(--text2); }
+.ofield input { width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--title); caret-color: var(--purple-light); }
+.ofield input::placeholder { color: rgba(232, 220, 196, .35); }
+
 /* ---------- Toast and notification ---------- */
 #toast {
   position: absolute; z-index: 50; left: 50%; bottom: calc(var(--nav) + 70px); transform: translateX(-50%);

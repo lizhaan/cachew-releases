@@ -54,7 +54,6 @@ SCREENS.home = () => {
 };
 
 ACTIONS.prop = name => toast(`${name} isn't part of this demo. Try a shop.`);
-ACTIONS['open-cachew'] = () => toast('The Cachew app opens in the next demo update.');
 
 /** Tap on a shop icon: night block, a running session, or a fresh pause. */
 ACTIONS.open = shop => {
@@ -572,7 +571,7 @@ ACTIONS['sys:home'] = () => goHome();
 ACTIONS['sys:recents'] = () => toast('Recent apps aren\'t part of this demo.');
 ACTIONS['sys:back'] = () => {
   if (sheetOpen()) {
-    if ($('#sheet .share-sheet')) closeSheet();
+    if (!$('#sheet .checkin')) closeSheet();
     return; // the check-in sheet waits for an answer
   }
   switch (NAV.screen) {
@@ -591,6 +590,8 @@ ACTIONS['sys:back'] = () => {
       break;
     case 'share': go(NAV.back); break;
     case 'reward': ACTIONS['reward-done'](); break;
+    case 'app': goHome(); break;
+    case 'goal': case 'shield': go(NAV.back || { screen: 'app', tab: 'den' }); break;
     default: break;
   }
 };

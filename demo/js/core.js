@@ -27,7 +27,7 @@ const RULES = {
 
 const HOUR = 3600e3, DAY = 24 * HOUR;
 const STORAGE_KEY = 'cachew-demo-state';
-const STATE_VERSION = 1;
+const STATE_VERSION = 2;
 
 /* ---------- Clock: real time plus whatever "48 hours later" added ---------- */
 function now() { return Date.now() + (S.clockOffset || 0); }
@@ -47,9 +47,11 @@ function seedState() {
     pennyBackDay: null,                 // Penny sits with her back to you until the day ends
     cashews: 20,
     heartsUsed: 1,
+    heartsMonth: monthOf(t),            // hearts refill when the month changes
+    shieldOn: true,
     closes: {},                         // dayKey -> rewarded closes that day
     defaultWait: RULES.DEFAULT_WAIT_HOURS,
-    goal: { name: 'Tokyo', amount: 900 },
+    goal: { name: 'Tokyo', amount: 900, setAt: t - 6 * DAY },
     goalsDone: [],
     items: [
       { id: 'i-sneakers', title: 'Running sneakers', price: 89, shop: 'amazon', art: 'sneakers', addedAt: t - 17 * HOUR, waitH: 48, status: 'waiting' },
@@ -58,11 +60,12 @@ function seedState() {
       { id: 'i-lamp', title: 'Desk lamp', price: 31, shop: 'temu', art: 'lamp', addedAt: t - 2.6 * DAY, waitH: 48, status: 'heart', decidedAt: t - 1.9 * DAY },
     ],
     // Every shop entry (the app's PauseRecord log). Stats is counted from this.
+    // Late evenings, so "riskiest hour" reads like design-v2/09 (11 PM).
     log: [
-      { at: t - 2.9 * DAY, shop: 'shein', mood: 'tired', specific: false, action: 'look', ms: 6e5 },
-      { at: t - 2.1 * DAY, shop: 'shein', mood: 'bored', specific: false, action: 'closed', ms: 0 },
-      { at: t - 1.5 * DAY, shop: 'amazon', mood: 'fine', specific: true, action: 'specific', ms: 4.2e5 },
-      { at: t - 0.8 * DAY, shop: 'temu', mood: 'stressed', specific: false, action: 'look', ms: 6e5 },
+      { at: atHour(t, 3, 23, 12), shop: 'shein', mood: 'tired', specific: false, action: 'look', ms: 6e5 },
+      { at: atHour(t, 2, 23, 40), shop: 'shein', mood: 'bored', specific: false, action: 'closed', ms: 0 },
+      { at: atHour(t, 2, 13, 5), shop: 'amazon', mood: 'fine', specific: true, action: 'specific', ms: 4.2e5 },
+      { at: atHour(t, 1, 22, 10), shop: 'temu', mood: 'stressed', specific: false, action: 'look', ms: 6e5 },
     ],
     session: null,
   };
@@ -93,6 +96,13 @@ function dayKey(ms) {
   const d = new Date(ms);
   return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 }
+/** [daysAgo] days before [t], at hh:mm. */
+function atHour(t, daysAgo, h, m) {
+  const d = new Date(t - daysAgo * DAY);
+  d.setHours(h, m, 0, 0);
+  return d.getTime();
+}
+function monthOf(ms) { const d = new Date(ms); return d.getFullYear() * 12 + d.getMonth(); }
 function daysBetween(fromKey, toMs) {
   const [y, m, d] = fromKey.split('-').map(Number);
   const a = new Date(y, m - 1, d).getTime();
@@ -115,7 +125,10 @@ const Game = {
     if (S.lastBoughtDay) return Math.max(0, daysBetween(S.lastBoughtDay, t));
     return Math.max(0, daysBetween(S.firstDay, t) + 1);
   },
-  heartsLeft() { return Math.max(0, RULES.HEARTS_PER_MONTH - S.heartsUsed); },
+  heartsLeft() {
+    if (S.heartsMonth !== monthOf(now())) { S.heartsMonth = monthOf(now()); S.heartsUsed = 0; saveState(); }
+    return Math.max(0, RULES.HEARTS_PER_MONTH - S.heartsUsed);
+  },
   heartsRefill() {
     const d = new Date(now());
     return new Date(d.getFullYear(), d.getMonth() + 1, 1);
@@ -125,7 +138,8 @@ const Game = {
     RULES.LEVEL_THRESHOLDS.forEach((from, i) => { if (cashews >= from) n = i + 1; });
     return n;
   },
-  isNight() { return !!S.night; },
+  // Night = the demo's night mode, and only while the shield is on (like shield.isNight in the app).
+  isNight() { return !!S.night && S.shieldOn !== false; },
   // Headline of the choice screen, from the two answers only (Game.headline).
   headline(mood, specific) {
     const word = { tired: 'Tired', bored: 'Bored', stressed: 'Stressed', fine: 'Fine' }[mood];
