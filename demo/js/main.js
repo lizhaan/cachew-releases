@@ -108,3 +108,13 @@ renderPanel();
 if (S.session && Date.now() >= S.session.endsAt) { S.session = null; saveState(); }
 go({ screen: 'home' }, false);
 setInterval(tick, 200);
+
+/* ---------- Offline: service worker (sw.js). A new version reloads the page once. ---------- */
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController && !reloaded) { reloaded = true; location.reload(); }
+  });
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => { /* the demo works online anyway */ });
+}
