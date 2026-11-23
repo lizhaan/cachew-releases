@@ -54,7 +54,7 @@ function heartsLeftText(left) { return `${left} heart${left === 1 ? '' : 's'} le
  * Den (design-v2/01). Title is just "Den" in the demo.
  * ===================================================================== */
 TAB_SCREENS.den = () => {
-  const hour = new Date(now()).getHours();
+  const hour = new Date(displayNow()).getHours();
   const greeting = hour >= 5 && hour <= 11 ? 'Good morning' : hour >= 12 && hour <= 17 ? 'Good afternoon' : 'Good evening';
   const lv = levelInfo();
   const left = Game.heartsLeft();

@@ -330,6 +330,32 @@ button.card:active, button.tile:active, button.btn2:active { filter: brightness(
 .ofield input { width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--title); caret-color: var(--purple-light); }
 .ofield input::placeholder { color: rgba(232, 220, 196, .35); }
 
+/* ---------- Lock screen with the reminder (18) ---------- */
+.lockscreen {
+  cursor: pointer;
+  background: radial-gradient(420px 420px at 30% 0, rgba(83, 52, 150, .75), transparent 70%),
+    linear-gradient(180deg, #2a2150, #141a2c 45%, #0d1a12 70%, #1b3526);
+}
+.lock-time { font-size: 104px; font-weight: 800; letter-spacing: -4px; line-height: 1; color: var(--sand); }
+.notif {
+  display: flex; gap: 14px; align-items: flex-start; margin: 0 14px; padding: 14px 18px 16px 14px; text-align: left;
+  border-radius: 26px; background: rgba(30, 36, 32, .88); border: 1px solid var(--card-border); color: var(--text);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .35); animation: drop .35s cubic-bezier(.2, .8, .2, 1);
+}
+@keyframes drop { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
+.notif img { width: 42px; height: 42px; border-radius: 12px; flex: none; box-shadow: 0 0 0 1px rgba(244, 182, 63, .35); }
+.notif b { font-size: 16px; color: var(--title); }
+.notif .nt { font-size: 16px; font-weight: 700; color: var(--title); margin: 2px 0; }
+
+/* ---------- Kept, not spent ---------- */
+.win-amount {
+  font-weight: 900; letter-spacing: -2px; line-height: 1.05;
+  background: linear-gradient(180deg, var(--title), var(--purple-soft)); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.pile { position: relative; width: 320px; height: 250px; flex: none; }
+@container (max-width: 370px) { .pile { transform: scale(.88); margin: -14px 0; } }
+.pile > img:not(.penny) { position: absolute; left: 133px; bottom: 0; width: 54px; height: 54px; }
+
 /* ---------- Toast and notification ---------- */
 #toast {
   position: absolute; z-index: 50; left: 50%; bottom: calc(var(--nav) + 70px); transform: translateX(-50%);

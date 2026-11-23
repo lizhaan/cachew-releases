@@ -56,7 +56,7 @@ const CATALOG = {
   ],
   temu: [
     { id: 'p-fan', title: 'Mini desk fan', price: 9.49, was: 21.99, art: 'fan', bg: ['#e2f1fb', '#b8dcf3'], fg: '#2f7bb0' },
-    { id: 'p-gloss', title: 'Lip gloss set · 6 pcs', short: 'Lip gloss set', price: 7.98, art: 'gloss', bg: ['#fbe0ea', '#f2b2c8'], fg: '#c2306a' },
+    { id: 'p-gloss', title: 'Lip gloss set · 6 pcs', short: 'Lip gloss set', price: 38, was: 54.99, art: 'gloss', bg: ['#fbe0ea', '#f2b2c8'], fg: '#c2306a' },
     { id: 'p-organizer', title: 'Desk organizer', price: 11.29, art: 'organizer', bg: ['#e8f3df', '#c6e2b0'], fg: '#4f8a2c' },
     { id: 'p-temu-tote', title: 'Mesh beach bag', price: 6.99, art: 'tote', bg: ['#fff1d6', '#fbd99a'], fg: '#b57a12' },
     { id: 'p-temu-lamp', title: 'Moon night lamp', price: 13.49, art: 'lamp', bg: ['#ece6fb', '#cdc1f3'], fg: '#5b46a8' },
@@ -76,12 +76,12 @@ function findProduct(shop, id) { return (CATALOG[shop] || []).find(p => p.id ===
 
 /** Thumbnail of a waiting-list item: its product drawing, or a colored square with a letter. */
 function itemArt(item) {
+  const own = ITEM_ART[item.art];
+  if (own) return artSvg(item.art, own.bg, own.fg);
   if (item.product) {
     const p = findProduct(item.shop, item.product);
     if (p) return artSvg(p.art, p.bg, p.fg);
   }
-  const a = ITEM_ART[item.art];
-  if (a) return artSvg(item.art, a.bg, a.fg);
   const shop = SHOPS[item.shop];
   return `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="${shop ? shop.color : '#8B5CF6'}"/><text x="50" y="64" text-anchor="middle" font-size="44" font-weight="800" fill="#fff" font-family="Inter, sans-serif">${(item.title || '?').charAt(0).toUpperCase()}</text></svg>`;
 }

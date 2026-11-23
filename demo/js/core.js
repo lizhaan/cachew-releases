@@ -27,10 +27,19 @@ const RULES = {
 
 const HOUR = 3600e3, DAY = 24 * HOUR;
 const STORAGE_KEY = 'cachew-demo-state';
-const STATE_VERSION = 2;
+const STATE_VERSION = 3;
 
 /* ---------- Clock: real time plus whatever "48 hours later" added ---------- */
 function now() { return Date.now() + (S.clockOffset || 0); }
+
+/** The time the phone shows: in night mode the evening starts at 23:42 and runs on from there. */
+function displayNow() {
+  if (!S.night) return now();
+  const d = new Date(now());
+  d.setHours(23, 42, 0, 0);
+  return d.getTime() + Math.max(0, Date.now() - (S.nightSince || Date.now()));
+}
+function displayTime() { return hhmm(displayNow()); }
 
 /* ---------- State ---------- */
 let S = null;
@@ -54,8 +63,8 @@ function seedState() {
     goal: { name: 'Tokyo', amount: 900, setAt: t - 6 * DAY },
     goalsDone: [],
     items: [
-      { id: 'i-sneakers', title: 'Running sneakers', price: 89, shop: 'amazon', art: 'sneakers', addedAt: t - 17 * HOUR, waitH: 48, status: 'waiting' },
-      { id: 'i-gloss', title: 'Lip gloss set', price: 38, shop: 'temu', art: 'gloss', addedAt: t - 36 * HOUR, waitH: 48, status: 'waiting' },
+      { id: 'i-sneakers', title: 'Running sneakers', price: 89, shop: 'amazon', art: 'sneakers', product: 'p-amz-sneakers', addedAt: t - 17 * HOUR, waitH: 48, status: 'waiting' },
+      { id: 'i-gloss', title: 'Lip gloss set', price: 38, shop: 'temu', art: 'gloss', product: 'p-gloss', addedAt: t - 36 * HOUR, waitH: 48, status: 'waiting' },
       { id: 'i-case', title: 'Phone case', price: 22, shop: 'amazon', art: 'phonecase', addedAt: t - 3.2 * DAY, waitH: 24, status: 'kept', decidedAt: t - 2 * DAY },
       { id: 'i-lamp', title: 'Desk lamp', price: 31, shop: 'temu', art: 'lamp', addedAt: t - 2.6 * DAY, waitH: 48, status: 'heart', decidedAt: t - 1.9 * DAY },
     ],

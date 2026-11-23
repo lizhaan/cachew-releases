@@ -40,7 +40,7 @@ SCREENS.home = () => {
   const shopApp = k => `<button type="button" class="app${!S.triedPause && k === 'shein' ? ' pulse-dot' : ''}" data-act="open|${k}">
       <i style="background:${SHOPS[k].color}">${SHOPS[k].letter}</i><span>${SHOPS[k].name}</span></button>`;
   return `<div class="scr launcher">
-    <div class="clock"><b id="ln-time">${hhmm(now())}</b><span>${date}, ${monthName(now())} ${t.getDate()}</span></div>
+    <div class="clock"><b id="ln-time">${displayTime()}</b><span>${date}, ${monthName(now())} ${t.getDate()}</span></div>
     ${S.triedPause ? '' : `<div class="hint">${penny('peek', 44)}<span>Open Shein, Amazon or Temu. Cachew pauses it before you shop.</span></div>`}
     <div class="grow"></div>
     <div class="apps">
@@ -57,6 +57,8 @@ ACTIONS.prop = name => toast(`${name} isn't part of this demo. Try a shop.`);
 
 /** Tap on a shop icon: night block, a running session, or a fresh pause. */
 ACTIONS.open = shop => {
+  // Night shield hours: the shop doesn't open at all.
+  if (Game.isNight()) { go({ screen: 'block', shop }); return; }
   const s = S.session;
   if (s && s.shop === shop) {
     go({ screen: 'shop', shop, product: s.lastProduct || null });
@@ -102,10 +104,10 @@ SCREENS.pause = n => {
       <div class="count" id="count">${Math.ceil(RULES.PAUSE_SECONDS - elapsed / 1000)}</div>
       <h1 class="h1" style="font-size:32px;line-height:40px">Pause. Breathe.</h1>
       ${gap(12)}
-      <p class="txt">You're in a shop. Penny's got a couple of questions.</p>
+      <p class="txt">${n.buying ? 'You waited for this one. One breath, then go get it.' : 'You\'re in a shop. Penny\'s got a couple of questions.'}</p>
       <div class="grow"></div>
     </div>
-    <div class="foot">${primaryBtn('Answer Penny', 'pause-answer', !done, 'answer')}</div>
+    <div class="foot">${n.buying ? primaryBtn('Continue to ' + shop.name, 'buy-continue', !done, 'answer') : primaryBtn('Answer Penny', 'pause-answer', !done, 'answer')}</div>
   </div>`;
 };
 
@@ -269,6 +271,8 @@ function tickSession() {
   if (!s) return;
   const t = Date.now();
   if (t >= s.endsAt) { finishSession(); return; }
+  // A "Buy it" visit ends as soon as you leave the shop: next time it's a normal pause.
+  if (s.mode === 'buy' && !inSessionShop()) { S.session = null; saveState(); renderOverlays(); return; }
   if (!inSessionShop()) return;
   const p = $('#pill-text');
   if (p) p.textContent = pillText();
@@ -361,6 +365,7 @@ const SHARE_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" 
 function productPage(n) {
   const shop = SHOPS[n.shop];
   const p = findProduct(n.shop, n.product);
+  if (dealEndsAt < Date.now() + 60e3) dealEndsAt = Date.now() + (2 * 3600 + 14 * 60 + 9) * 1000;
   const deal = p.was
     ? `<span class="pp-deal" id="deal">-${Math.round((1 - p.price / p.was) * 100)}% · ends in ${dealLeft()}</span>`
     : `<span class="pp-deal">🔥 ${200 + p.title.length * 7} sold today</span>`;
@@ -577,6 +582,7 @@ ACTIONS['sys:back'] = () => {
   switch (NAV.screen) {
     case 'pause':
       // Back on the pause goes to the phone's home screen, not into the shop.
+      if (NAV.buying) { goHome(); break; }
       Game.logEntry({ at: NAV.openedAt, shop: NAV.shop, mood: NAV.mood, specific: NAV.specific, action: 'left', ms: 0 });
       goHome();
       break;
@@ -592,6 +598,10 @@ ACTIONS['sys:back'] = () => {
     case 'reward': ACTIONS['reward-done'](); break;
     case 'app': goHome(); break;
     case 'goal': case 'shield': go(NAV.back || { screen: 'app', tab: 'den' }); break;
+    case 'lock': ACTIONS['lock-dismiss'](); break;
+    case 'still': go({ screen: 'app', tab: 'waiting' }); break;
+    case 'win': case 'bought': case 'heart': go({ screen: 'app', tab: 'den' }); break;
+    case 'block': goHome(); break;
     default: break;
   }
 };

@@ -27,13 +27,15 @@ function layout() {
 /* ---------- Demo controls: the side panel on wide screens, the "Demo" button on phones ---------- */
 function demoControls() {
   return `
+    <button type="button" class="demo-btn" data-act="demo-48h">⏩ <span>48 hours later<small>The wait is over: Penny asks “Still want it?”</small></span></button>
+    <button type="button" class="demo-btn" data-act="demo-night" aria-pressed="${!!S.night}">🌙 <span>Night mode ${S.night ? 'on' : 'off'}<small>${S.night ? 'Tap for morning' : 'Shops stay closed until 07:00'}</small></span></button>
     <button type="button" class="demo-btn" data-act="demo-reset">↺ <span>Reset demo<small>Start over with the sample waiting list</small></span></button>`;
 }
 
 function renderPanel() {
   $('#panel').innerHTML = `
     <h2>Cachew, in your browser</h2>
-    <p>Tap a shop on the phone. Cachew pauses it for 10 seconds, Penny asks two questions, and you pick a plan.</p>
+    <p>Tap a shop on the phone. Cachew pauses it for 10 seconds, Penny asks two questions, and you pick a plan. Save something with Share, then jump 48 hours ahead.</p>
     <p>Time runs faster here: a 10-minute shop visit takes 20 seconds.</p>
     ${demoControls()}`;
   $('#fab-menu').innerHTML = demoControls();
@@ -43,6 +45,7 @@ ACTIONS['demo-reset'] = () => {
   closeFab();
   resetState();
   closeSheet();
+  renderPanel();
   go({ screen: 'home' });
   toast('Demo reset');
 };
@@ -88,7 +91,7 @@ function tick() {
   tickPause();
   tickSession();
   tickDeal();
-  const t = hhmm(now());
+  const t = displayTime();
   if (t !== lastMinute) {
     lastMinute = t;
     $('#sb-time').textContent = t;
