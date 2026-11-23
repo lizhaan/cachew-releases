@@ -255,14 +255,14 @@ TAB_SCREENS.me = () => {
     </div>
     ${gap(20)}
     ${rowHtml('Night shield', shieldText(), 'shield')}
-    ${rowHtml('Shops with a pause', '3 apps', 'me-shops')}
+    ${rowHtml('Shops with a pause', `${(S.shops || []).length} app${(S.shops || []).length === 1 ? '' : 's'}`, 'me-shops')}
     ${rowHtml('Waiting time', `${S.defaultWait} hours`, 'me-wait')}
     ${rowHtml('Savings goal', goal ? `${goal.name} · ${money(Math.min(goalProgress(), goal.amount))} of ${money(goal.amount)}` : 'Not set', 'goal')}
+    ${rowHtml('Show the intro again', '', 'me-intro')}
     ${rowHtml('Reset demo data', '', 'me-reset')}
     ${gap(4)}`;
 };
 
-ACTIONS['me-shops'] = () => toast('In the app you pick any shopping apps. Here it\'s Shein, Amazon and Temu.', 3200);
 ACTIONS['me-wait'] = () => {
   openSheet(`<div class="dialog" role="dialog" aria-label="Waiting time">
     <h2 class="dlg-title">Waiting time</h2>
@@ -328,13 +328,14 @@ ACTIONS['goal-skip'] = () => go(NAV.back || { screen: 'app', tab: 'den' });
  * ===================================================================== */
 ACTIONS.shield = () => go({ screen: 'shield', back: { ...NAV } });
 
-SCREENS.shield = () => {
+SCREENS.shield = n => {
   const on = S.shieldOn !== false;
   // In the real app the schedule locks 2 hours before the night until it ends; in the demo: while night mode is on.
   const locked = on && Game.isNight();
   return `<div class="scr bg-day">
     <div class="body">
       ${gap(20)}
+      ${n.onboarding ? obProgress(4) + gap(16) : ''}
       <div style="display:flex;align-items:center;gap:8px">
         <div class="grow"><h1 class="h1" style="font-size:34px;line-height:40px">Night shield</h1>${gap(6)}
           <p class="txt" style="font-size:17px;line-height:24px">Your riskiest hours. The shops you picked stay closed.</p></div>
@@ -365,4 +366,13 @@ SCREENS.shield = () => {
 };
 ACTIONS['shield-time'] = () => toast('In the app you pick your own hours. The demo keeps 23:00 – 07:00.', 3200);
 ACTIONS['shield-toggle'] = () => { S.shieldOn = S.shieldOn === false; saveState(); render(false); };
-ACTIONS['shield-save'] = () => go(NAV.back || { screen: 'app', tab: 'den' });
+ACTIONS['shield-save'] = () => {
+  if (NAV.onboarding) {
+    // Last onboarding step: the den, with "What are you saving for?" on top of it.
+    S.onboarded = true;
+    saveState();
+    go({ screen: 'goal', back: { screen: 'app', tab: 'den' } });
+    return;
+  }
+  go(NAV.back || { screen: 'app', tab: 'den' });
+};

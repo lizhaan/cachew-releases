@@ -57,6 +57,8 @@ ACTIONS.prop = name => toast(`${name} isn't part of this demo. Try a shop.`);
 
 /** Tap on a shop icon: night block, a running session, or a fresh pause. */
 ACTIONS.open = shop => {
+  // Not one of the "Shops with a pause": Cachew doesn't step in, the shop just opens.
+  if (!(S.shops || []).includes(shop)) { go({ screen: 'shop', shop, product: null }); return; }
   // Night shield hours: the shop doesn't open at all.
   if (Game.isNight()) { go({ screen: 'block', shop }); return; }
   const s = S.session;
@@ -597,7 +599,9 @@ ACTIONS['sys:back'] = () => {
     case 'share': go(NAV.back); break;
     case 'reward': ACTIONS['reward-done'](); break;
     case 'app': goHome(); break;
-    case 'goal': case 'shield': go(NAV.back || { screen: 'app', tab: 'den' }); break;
+    case 'ob': obBack(); break;
+    case 'shield': go(NAV.onboarding ? { screen: 'ob', step: 'shops' } : NAV.back || { screen: 'app', tab: 'den' }); break;
+    case 'goal': case 'shops': go(NAV.back || { screen: 'app', tab: 'den' }); break;
     case 'lock': ACTIONS['lock-dismiss'](); break;
     case 'still': go({ screen: 'app', tab: 'waiting' }); break;
     case 'win': case 'bought': case 'heart': go({ screen: 'app', tab: 'den' }); break;

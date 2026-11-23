@@ -27,7 +27,7 @@ const RULES = {
 
 const HOUR = 3600e3, DAY = 24 * HOUR;
 const STORAGE_KEY = 'cachew-demo-state';
-const STATE_VERSION = 3;
+const STATE_VERSION = 4;
 
 /* ---------- Clock: real time plus whatever "48 hours later" added ---------- */
 function now() { return Date.now() + (S.clockOffset || 0); }
@@ -51,6 +51,9 @@ function seedState() {
     v: STATE_VERSION,
     clockOffset: 0,
     night: false,
+    onboarded: false,                   // the first tap on Cachew starts the intro
+    profile: {},                        // About you + quiz answers, kept only in this browser
+    shops: ['amazon', 'shein', 'temu'], // "Shops with a pause"
     firstDay: dayKey(t - DAY),          // 2-day streak today
     lastBoughtDay: null,                // "I already bought it" resets the streak
     pennyBackDay: null,                 // Penny sits with her back to you until the day ends

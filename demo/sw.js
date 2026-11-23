@@ -6,7 +6,7 @@
  */
 'use strict';
 
-const CACHE_VERSION = 1;
+const CACHE_VERSION = 2;
 const CACHE = 'cachew-demo-v' + CACHE_VERSION;
 
 const FILES = [
@@ -20,6 +20,7 @@ const FILES = [
   './js/flow.js',
   './js/app.js',
   './js/verdict.js',
+  './js/onboarding.js',
   './js/main.js',
   './assets/fonts/inter-regular.woff',
   './assets/fonts/inter-medium.woff',
@@ -36,6 +37,8 @@ const FILES = [
   './assets/icons/heart_empty.svg',
   './assets/icons/moon.svg',
   './assets/penny/back.png',
+  './assets/penny/big_curl.png',
+  './assets/penny/wave.png',
   './assets/penny/ball.png',
   './assets/penny/calm.png',
   './assets/penny/lie.png',

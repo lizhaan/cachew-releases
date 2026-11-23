@@ -330,6 +330,26 @@ button.card:active, button.tile:active, button.btn2:active { filter: brightness(
 .ofield input { width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--title); caret-color: var(--purple-light); }
 .ofield input::placeholder { color: rgba(232, 220, 196, .35); }
 
+/* ---------- Onboarding ---------- */
+.obprog { display: flex; gap: 8px; }
+.obprog i { flex: 1; height: 5px; border-radius: 99px; background: rgba(232, 220, 196, .12); }
+.obprog i.on { background: var(--purple-light); box-shadow: 0 0 8px rgba(139, 92, 246, .7); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ochip { padding: 10px 14px; border-radius: 14px; background: var(--card); border: 1px solid var(--card-border); font-size: 15px; font-weight: 600; color: var(--text); }
+.ochip.sel { background: rgba(139, 92, 246, .25); border: 1.5px solid var(--selected-border); padding: 9.5px 13.5px; }
+.radio { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--card-border); display: grid; place-items: center; flex: none; font-size: 14px; font-weight: 700; color: var(--title); }
+.radio.on { background: var(--purple); border-color: var(--purple-light); }
+.hours { display: flex; gap: 10px; height: 170px; }
+.hours > div { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.hours span { flex: 1; width: 100%; display: flex; align-items: flex-end; }
+.hours i { display: block; width: 100%; border-radius: 10px; background: linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .1)); }
+.hours i.peak { background: linear-gradient(180deg, var(--purple-soft), var(--purple)); }
+.hours b { font-size: 11px; color: var(--text2); white-space: nowrap; }
+.stepno { width: 30px; height: 30px; border-radius: 9px; flex: none; display: grid; place-items: center; background: linear-gradient(135deg, var(--purple-light), var(--purple)); font-size: 15px; font-weight: 800; color: var(--title); }
+.shopgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
+.shoptile { min-height: 118px; padding: 14px 8px; gap: 10px; }
+.shoptile small { font-size: 11px; font-weight: 400; color: var(--text2); margin-top: -8px; }
+
 /* ---------- Lock screen with the reminder (18) ---------- */
 .lockscreen {
   cursor: pointer;
