@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cachew · interactive demo</title>
+<meta name="description" content="Try Cachew in your browser: the 10-second pause, Penny's questions, the waiting list and the winter stash.">
+<meta name="theme-color" content="#09170F">
+<link rel="icon" href="assets/icons/app_icon_512.png">
+<link rel="stylesheet" href="css/demo.css">
+</head>
+<body>
+<div id="banner">
+  <a href="../">Interactive demo · the real app is on Android <span aria-hidden="true">→</span></a>
+</div>
+
+<main id="stage">
+  <div id="device">
+    <div id="phone" class="dark-ui">
+      <div id="screen"></div>
+      <div id="overlays"></div>
+      <div id="sheet"></div>
+      <div id="notif"></div>
+      <div id="statusbar" aria-hidden="true">
+        <span id="sb-time">9:41</span>
+        <span class="sb-icons">
+          <svg width="17" height="12" viewBox="0 0 17 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="4.5" y="5.5" width="3" height="6.5" rx="1"/><rect x="9" y="3" width="3" height="9" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="26" height="13" viewBox="0 0 26 13"><rect x="0.75" y="0.75" width="21.5" height="11.5" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="3" width="15" height="7" rx="1.6"/><rect x="23.5" y="4" width="2" height="5" rx="1"/></svg>
+        </span>
+      </div>
+      <div id="toast" role="status" aria-live="polite"></div>
+      <nav id="navbar" aria-label="Phone buttons">
+        <button type="button" data-act="sys:recents" aria-label="Recent apps"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M5 4v12M10 4v12M15 4v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <button type="button" data-act="sys:home" aria-label="Home"><svg width="22" height="22" viewBox="0 0 22 22"><rect x="3" y="3" width="16" height="16" rx="8" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+        <button type="button" data-act="sys:back" aria-label="Back"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M13 3 6 10l7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </nav>
+    </div>
+  </div>
+
+  <aside id="panel" aria-label="Demo controls"></aside>
+</main>
+
+<button type="button" id="fab" aria-expanded="false" aria-controls="fab-menu">Demo</button>
+<div id="fab-menu" hidden></div>
+
+<script src="js/core.js"></script>
+<script src="js/art.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/flow.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
